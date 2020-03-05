@@ -6,6 +6,22 @@ This project is part of student project. The main goal is to implement programe 
 
 ***Project might not implement all features defined in JSON Schema documentation.***
 
+## Running project
+
+To run current state of project type:
+
+```
+./validator.py exampleFile.txt
+```
+
+or
+
+```
+python3 validator.py exampleFile.txt
+```
+
+Running script needs path to input file as command line argument.
+
 ## Details
 
 Project will be created based on BNF notation.
