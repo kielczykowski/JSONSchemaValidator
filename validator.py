@@ -1,12 +1,18 @@
 #!/usr/bin/python3
 import sys
+from scanner import Scanner
 
 
 if __name__ == "__main__":
+  file_text = ""
   print("Starting validation")
   if len(sys.argv) < 2:
     raise RuntimeError("Missing input argument.")
   with open(sys.argv[1]) as input_file:
-    print(input_file.read())
+    file_text = input_file.read()
+  # print(file_text)
+
+  scanner = Scanner(file_text)
+
   
   pass
