@@ -21,12 +21,12 @@ class Scanner:
     line_number = 1
     current_position = line_start = 0
     match = get_token(input_string)
-    # print ('token_regex')
-    # print (token_regex)
-    # print('keywords')
-    # print(keywords)
-    # print('token_specs')
-    # print(token_specs)
+    print ('token_regex')
+    print (token_regex)
+    print('keywords')
+    print(keywords)
+    print('token_specs')
+    print(token_specs)
     # TODO logic of scanner
 
     # TODO return list of tokens
@@ -34,11 +34,11 @@ class Scanner:
 
   def readKeywords(self):
     with open("keywords") as kw:
-      return [word.upper() for word in kw.read().split(sep=",")]
+      return [word.upper().strip(" \t\n") for word in kw.read().split(sep=",")]
 
   def readTokenSpecs(self):
     with open("token_specs") as token_specs:
-      return [(spec.split(",")[0], spec.split(",")[1].rstrip("\n")) for spec in token_specs.readlines()]
+      return [(spec.split(",")[0], spec.split(",")[1].strip(" \t\n")) for spec in token_specs.readlines()]
 
   
   def nextToken(self):
