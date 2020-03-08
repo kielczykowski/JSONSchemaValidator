@@ -5,7 +5,7 @@ CSB:: \]
 COLON:: :
 COMMA::,
 STRING::"(.+?)"
-DOUBLE:: \d+\.\d+
-INT:: \d+
+NUMBER:: \d+\.\d+
+INTEGER:: \d+
 NEWLINE::\n
 SKIP::[ \t]
