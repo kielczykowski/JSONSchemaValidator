@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sys
 from scanner import Scanner
+from parser import Parser
 
 
 if __name__ == "__main__":
@@ -13,6 +14,8 @@ if __name__ == "__main__":
   # print(file_text)
 
   scanner = Scanner(file_text)
+  parser = Parser(scanner)
+  parser.start()
 
   
   pass
