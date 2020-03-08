@@ -1,4 +1,1 @@
-id,schema,   title,type,properties,
-
-
-description,required,minimum,maximum,minLength,maxLength,enum,definitions,ref
+$id,$schema,title,type,properties,description,required,minimum,maximum,minLength,maxLength,enum,definitions,$ref
