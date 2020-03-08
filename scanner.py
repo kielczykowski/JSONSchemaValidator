@@ -75,8 +75,11 @@ class Scanner:
 
   
   def nextToken(self):
-    # TODO get next token
-    pass
+    self.current_token_ +=1
+    if self.current_token_-1 < len(self.tokens_):
+      return self.tokens_[self.current_token_-1]
+    else:
+      raise RuntimeError('No more tokens')
 
 if __name__ == "__main__":
   scanner = Scanner(sys.argv[1])
