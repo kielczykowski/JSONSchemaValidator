@@ -1,2 +1,11 @@
-NEWLINE,\n
-SKIP,[ \t]
+OCB::\{
+CCB::\}
+OSB:: \[
+CSB:: \]
+COLON:: :
+COMMA::,
+STRING::"(.+?)"
+DOUBLE:: \d+\.\d+
+INT:: \d+
+NEWLINE::\n
+SKIP::[ \t]
