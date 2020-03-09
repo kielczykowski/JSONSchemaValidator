@@ -1,7 +1,7 @@
 {
     "types": {
         "null" : "NULL_TYPE",
-        "bool" : "BOOL_TYPE",
+        "boolean" : "BOOL_TYPE",
         "object" : "OBJ_TYPE",
         "array" : "ARR_TYPE",
         "number" : "NUM_TYPE",

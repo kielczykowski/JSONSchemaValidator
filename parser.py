@@ -20,7 +20,7 @@ class Parser:
       self.token = self.nextToken()
 
   def error (self, msg):
-    raise RuntimeError('Parser Error, {}'.format(msg))
+    raise RuntimeError('Parser Error, {} line: {} '.format(msg, self.token.line))
 
   def start(self):
     self.takeToken("OCB")
@@ -181,7 +181,7 @@ class Parser:
       self.value()
     elif self.token.type == "OSB":
       self.any_type_array()
-    elif self.token.type == " OCB":
+    elif self.token.type == "OCB":
       self.object()
     else :
       self.error("Expected regular_stmt, got {}".format(self.token.type))
