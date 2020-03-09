@@ -1,9 +1,12 @@
 import scanner
 
 class Parser:
-  ##### Parser header ######
+
   def __init__(self, tokenizer):
     self.nextToken = tokenizer.nextToken
+    self.is_in_required_ = False
+    self.required_ = []
+    self.is_in_properties_ = False
     self.token = self.nextToken()
 
   def takeToken(self, token_type):
@@ -14,18 +17,16 @@ class Parser:
 
   def error (self, msg):
     raise RuntimeError('Parser Error, {}'.format(msg))
-  
-  ##### Parser body ######
 
   def start(self):
-    # start -> OCB program CCB EOF
     self.takeToken("OCB")
     self.program()
     self.takeToken("CCB")
     self.takeToken("EOF") 
+    print("JSON Schema file: OK")
+    print(self.required_)
   
   def program(self):
-    # program -> start_statement program
     if self.token.type == "QUOT":
       self.start_statement()
       self.program()
@@ -34,14 +35,8 @@ class Parser:
   
   def start_statement(self):
     self.takeToken("QUOT")
-    # if self.token.type == "$ID" or self.token.type == "$SCHEMA" or self.token.type == "TITLE" or self.token.type == "TYPE" or \
-    #    self.token.type == "PROPERTIES" or self.token.type == "DESCRIPTION" or self.token.type == "REQUIRED" or self.token.type == "MINIMUM" or \
-    #    self.token.type == "MAXIMUM" or self.token.type == "MINLENGTH" or self.token.type == "MAXLENGTH" or self.token.type == "ENUM" or \
-    #    self.token.type == "DEFINITIONS" or self.token.type == "$REF":
     self.statement()
     self.statement_continuation()
-    # else:
-    #   self.error("Epsilon not allowed")
     
   def statement_continuation(self):
     if self.token.type == "COMMA":
@@ -52,7 +47,6 @@ class Parser:
     else:
       pass
 
-    
   def statement(self):
     if self.token.type == "$ID":
       self.id_stmt()
@@ -117,9 +111,11 @@ class Parser:
     print("description_stmt: OK")
   
   def required_stmt(self):
+    self.is_in_required_ = True
     self.takeToken("REQUIRED")
     self.qc_stmt_separator()
     self.string_array()
+    self.is_in_required_ = False
     print("required_stmt: OK")
   
   def type_stmt(self):
@@ -136,8 +132,6 @@ class Parser:
     else:
       self.error("boundary_stmt not found, got {}".format(self.token.type))
     
-
-
   def number_boundary_stmt(self):
     self.min_max()
     self.qc_stmt_separator()
@@ -273,6 +267,8 @@ class Parser:
        self.token.type == "DEFINITIONS" or self.token.type == "$REF":
       self.keyword()
     elif self.token.type == "STRING":
+      if self.is_in_required_:
+        self.required_.append(self.token.value)
       self.takeToken("STRING")
     elif self.token.type == "ARR_TYPE" or self.token.type == "BOOL_TYPE" or self.token.type == "OBJ_TYPE" or \
          self.token.type == "NULL_TYPE" or self.token.type == "NUM_TYPE" or self.token.type == "INT_TYPE" or \
@@ -373,7 +369,6 @@ class Parser:
     else:
       self.error("Expected keyword not found, got {}".format(self.token.type))
     
-  
   def min_max(self):
     if self.token.type == "MINIMUM":
       self.takeToken("MINIMUM")
@@ -390,9 +385,5 @@ class Parser:
     else :
       self.error("Epsilon not allowed, min_max not found")
     
-      
-
-
-
 if __name__ == "__main__":
   pass 
