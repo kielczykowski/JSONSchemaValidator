@@ -8,7 +8,7 @@ class Parser:
 
   def takeToken(self, token_type):
     if self.token.type != token_type :
-      self.error("Unexpected token: %s" % token_type)
+      self.error("Unexpected token: {}, got {}".format(token_type, self.token.type))
     if token_type != 'EOF':
       self.token = self.nextToken()
 
@@ -133,6 +133,8 @@ class Parser:
       self.str_len_boundary_stmt()
     else:
       self.error("boundary_stmt not found, got {}".format(self.token.type))
+    
+
 
   def number_boundary_stmt(self):
     self.min_max()
@@ -153,6 +155,55 @@ class Parser:
     self.qc_stmt_separator()
     self.any_type_array()
     print("enum_stmt: OK")
+  
+  def regular_stmt(self):
+    self.takeToken("STRING")
+    self.qc_stmt_separator()
+    if self.token.type == "SIGN" or self.token.type == "QUOT" or self.token.type == "INTEGER" or self.token.type == "NUMBER":
+      self.value()
+    elif self.token.type == "OSB":
+      self.any_type_array()
+    elif self.token.type == " OCB":
+      self.object()
+    else :
+      self.error("Expected regular_stmt, got {}".format(self.token.type))
+    print("regular_stmt: OK")
+
+  def property_stmt(self):
+    self.takeToken("PROPERTIES")
+    self.qc_stmt_separator()
+    self.hash()
+    print("property_stmt: OK")
+
+  def definition_stmt(self):
+    self.takeToken("DEFINITIONS")
+    self.qc_stmt_separator()
+    self.hash()
+    print("definition_stmt: OK")
+    
+  def hash(self):
+    self.takeToken("OCB")
+    self.string()
+    self.takeToken("COLON")
+    self.object()
+    self.hash_continuation()
+    self.takeToken("CCB")
+
+  def hash_continuation(self):
+    if self.token.type == "COMMA":
+      self.takeToken("COMMA")
+      self.string()
+      self.takeToken("COLON")
+      self.object()
+      self.hash_continuation()
+    else:
+      pass
+
+  def object(self):
+    self.takeToken("OCB")
+    if self.token.type == "QUOT":
+      self.program()
+    self.takeToken("CCB")
   
   def any_type_array(self):
     self.takeToken("OSB")
@@ -263,7 +314,7 @@ class Parser:
       self.takeToken("INT_TYPE")
     elif self.token.type == "STR_TYPE":
       self.takeToken("STR_TYPE")
-    else 
+    else :
       self.error("Expected type not found, got {}".format(self.token.type))
   
   def number(self):
