@@ -44,8 +44,8 @@ Project will be created based on BNF notation.
 |           | regular_stmt  |
 |           | property_stmt |
 |           | definition_stmt |
-| **TODO**  | ref_stmt     |
-| **TODO**  | REF_URI    |
+|   | ref_stmt     |
+|   | REF_URI    |
 |  id_stmt  |   $ID qcq_stmt_separator STRING QUOT |
 | schema_stmt | $SCHEMA qcq_stmt_separator STRING QUOT  |
 | specification_stmt  | title_stmt  |
