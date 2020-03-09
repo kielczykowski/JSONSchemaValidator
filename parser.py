@@ -75,6 +75,8 @@ class Parser:
       self.definition_stmt()
     elif self.token.type == "$REF":
       self.ref_stmt()
+    elif self.token.type == "STRING":
+      self.regular_stmt()
     else:
       self.error("Epsilon not allowed")
   
@@ -180,6 +182,13 @@ class Parser:
     self.qc_stmt_separator()
     self.hash()
     print("definition_stmt: OK")
+  
+  def ref_stmt(self):
+    self.takeToken("$REF")
+    self.qcq_stmt_separator()
+    self.takeToken("REF_URI")
+    self.takeToken("QUOT")
+    print("ref_stmt: OK")
     
   def hash(self):
     self.takeToken("OCB")
@@ -325,6 +334,17 @@ class Parser:
     else:
       self.error("Expected number,  got {}".format(self.token.type))
 
+  def value(self):
+    if self.token.type == "SIGN":
+      self.takeToken("SIGN")
+      self.number()
+    elif self.token.type == "INTEGER" or self.token.type == "NUMBER":
+      self.number()
+    elif self.token.type == "QUOT":
+      self.string()
+    else:
+      self.error("Expected any_type_element, got {}".format(self.token.type))
+
   def keyword(self):
     if self.token.type == "$ID":
       self.takeToken("$ID")
@@ -364,7 +384,7 @@ class Parser:
 
   def min_max_len(self):
     if self.token.type == "MINLENGTH":
-      self.takeToken("MAXLENGTH")
+      self.takeToken("MINLENGTH")
     elif self.token.type == "MAXLENGTH":
       self.takeToken("MAXLENGTH")
     else :
