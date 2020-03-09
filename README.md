@@ -80,14 +80,12 @@ Project will be created based on BNF notation.
 | any_type_element  | SIGN number           |
 |                   | number                |
 |                   | string |
-| **TODO** | **ANY TYPE MUST BE ANY TYPE object, array missing** |
 | string_array  | OSB string  string_array_continuation CSB|
 |               | OSB CSB|
 | string_array_continuation | COMMA string string_array_continuation |
 |                           | eps                                                  |
 | type_element |  type_string |
 |              |  type_array  |
-|              | **?????string_array?????**|
 | type_array  | OSB type_string type_array_continuation CSB |
 | type_array_continuation | COMMA type_string type_array_continuation |
 |                         | eps                                       |
