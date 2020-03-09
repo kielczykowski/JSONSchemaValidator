@@ -5,8 +5,8 @@ class Parser:
   def __init__(self, tokenizer):
     self.nextToken = tokenizer.nextToken
     self.is_in_required_ = False
-    self.required_ = []
     self.is_in_properties_ = False
+    self.required_ = []
     self.token = self.nextToken()
 
   def takeToken(self, token_type):
@@ -23,8 +23,13 @@ class Parser:
     self.program()
     self.takeToken("CCB")
     self.takeToken("EOF") 
-    print("JSON Schema file: OK")
-    print(self.required_)
+    if len(self.required_) > 0:
+      print("The following arguments are required")
+      for arg in self.required_:
+        print(arg) 
+    else:
+      print("JSON Schema file: OK")
+
   
   def program(self):
     if self.token.type == "QUOT":
@@ -116,6 +121,7 @@ class Parser:
     self.qc_stmt_separator()
     self.string_array()
     self.is_in_required_ = False
+    print(self.required_)
     print("required_stmt: OK")
   
   def type_stmt(self):
@@ -166,9 +172,11 @@ class Parser:
     print("regular_stmt: OK")
 
   def property_stmt(self):
+    self.is_in_properties_ = True
     self.takeToken("PROPERTIES")
     self.qc_stmt_separator()
     self.hash()
+    self.is_in_properties_ = False
     print("property_stmt: OK")
 
   def definition_stmt(self):
@@ -269,6 +277,12 @@ class Parser:
     elif self.token.type == "STRING":
       if self.is_in_required_:
         self.required_.append(self.token.value)
+      if self.is_in_properties_:
+        if len(self.required_) > 0:
+          try:
+            self.required_.remove(self.token.value)
+          except:
+            pass
       self.takeToken("STRING")
     elif self.token.type == "ARR_TYPE" or self.token.type == "BOOL_TYPE" or self.token.type == "OBJ_TYPE" or \
          self.token.type == "NULL_TYPE" or self.token.type == "NUM_TYPE" or self.token.type == "INT_TYPE" or \
