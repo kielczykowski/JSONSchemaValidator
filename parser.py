@@ -177,7 +177,8 @@ class Parser:
   def regular_stmt(self):
     self.takeToken("STRING")
     self.qc_stmt_separator()
-    if self.token.type == "SIGN" or self.token.type == "QUOT" or self.token.type == "INTEGER" or self.token.type == "NUMBER":
+    if self.token.type == "SIGN" or self.token.type == "QUOT" or self.token.type == "INTEGER" or self.token.type == "NUMBER" or \
+       self.token.type == "FALSE" or self.token.type == "TRUE":
       self.value()
     elif self.token.type == "OSB":
       self.any_type_array()
@@ -244,25 +245,14 @@ class Parser:
   def any_type_array(self):
     self.takeToken("OSB")
     if self.token.type == "SIGN" or self.token.type == "QUOT" or self.token.type == "INTEGER" or self.token.type == "NUMBER":
-      self.any_type_element()
+      self.value()
       self.any_type_table_continuation()
     self.takeToken("CSB")
-  
-  def any_type_element(self):
-    if self.token.type == "SIGN":
-      self.takeToken("SIGN")
-      self.number()
-    elif self.token.type == "INTEGER" or self.token.type == "NUMBER":
-      self.number()
-    elif self.token.type == "QUOT":
-      self.string()
-    else:
-      self.error("Expected any_type_element, got {}".format(self.token.type))
     
   def any_type_table_continuation(self):
     if self.token.type == "COMMA":
       self.takeToken("COMMA")
-      self.any_type_element()
+      self.value()
       self.any_type_table_continuation()
     else:
       pass
@@ -380,8 +370,18 @@ class Parser:
       self.number()
     elif self.token.type == "QUOT":
       self.string()
+    elif self.token.type == "FALSE" or self.token.type == "TRUE":
+      self.boolean()
     else:
-      self.error("Expected any_type_element, got {}".format(self.token.type))
+      self.error("Expected value, got {}".format(self.token.type))
+    
+  def boolean(self):
+    if self.token.type == "FALSE":
+      self.takeToken("FALSE")
+    elif self.token.type == "TRUE":
+      self.takeToken("TRUE")
+    else :
+      self.error("Expected boolean, got {}".format(self.token.type))
 
   def keyword(self):
     if self.token.type == "$ID":

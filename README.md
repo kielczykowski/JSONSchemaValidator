@@ -73,13 +73,10 @@ Project will be created based on BNF notation.
 |                   | eps                                         |
 | object  | OCB program CCB |
 |         | OCB CCB         |
-| any_type_array  | OSB any_type_element any_type_table_continuation CSB  |
+| any_type_array  | OSB value any_type_table_continuation CSB  |
 |                 | OSB CSB                                               |
-| any_type_table_continuation | COMMA any_type_element  any_type_table_continuation |
+| any_type_table_continuation | COMMA value  any_type_table_continuation |
 |                             | eps                                                 |
-| any_type_element  | SIGN number           |
-|                   | number                |
-|                   | string |
 | string_array  | OSB string  string_array_continuation CSB|
 |               | OSB CSB|
 | string_array_continuation | COMMA string string_array_continuation |
@@ -118,6 +115,9 @@ Project will be created based on BNF notation.
 | value | SIGN number           |
 |       | number                |
 |       | string                |
+|       | boolean               |
+| boolean | FALSE |
+|         | TRUE  |
 | string  | QUOT STRING QUOT  | 
 |         | QUOT keyword QUOT |
 |         | QUOT type QUOT    |

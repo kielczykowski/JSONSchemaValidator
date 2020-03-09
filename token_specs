@@ -4,6 +4,8 @@ OSB:: \[
 CSB:: \]
 COLON:: :
 COMMA::,
+FALSE::false
+TRUE::true
 REF_URI:: "#/definitions/(.+?)"
 STRING::"(.+?)"
 NUMBER:: [+-]?\d+\.\d+
