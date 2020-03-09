@@ -6,6 +6,10 @@ class Parser:
     self.nextToken = tokenizer.nextToken
     self.is_in_required_ = False
     self.is_in_properties_ = False
+    self.is_in_definitions_ = False
+    self.needs_definions_ = False
+    self.has_definitions_ = False
+    self.definitions_ = []
     self.required_ = []
     self.token = self.nextToken()
 
@@ -23,12 +27,24 @@ class Parser:
     self.program()
     self.takeToken("CCB")
     self.takeToken("EOF") 
+    if self.checkEndState():
+      print("JSON Schema file: OK")
+
+    
+  
+  def checkEndState(self):
+    if len(self.definitions_) > 0:
+      print("File is lacking the following definitions")
+      for definition in self.definitions_:
+        print(definition)
+      return False
     if len(self.required_) > 0:
       print("The following arguments are required")
       for arg in self.required_:
         print(arg) 
-    else:
-      print("JSON Schema file: OK")
+      return False
+    return True
+
 
   
   def program(self):
@@ -180,14 +196,23 @@ class Parser:
     print("property_stmt: OK")
 
   def definition_stmt(self):
+    self.is_in_definitions_ = True
     self.takeToken("DEFINITIONS")
+    self.has_definitions_ = True
     self.qc_stmt_separator()
     self.hash()
+    self.is_in_definitions_ = False
     print("definition_stmt: OK")
   
   def ref_stmt(self):
     self.takeToken("$REF")
     self.qcq_stmt_separator()
+    if self.token.type == "REF_URI":
+      splitted = self.token.value.split("/")
+      if splitted[1] == "definitions":
+        self.needs_definions_ = True
+        if splitted[2] not in self.definitions_:
+          self.definitions_.append(splitted[2])
     self.takeToken("REF_URI")
     self.takeToken("QUOT")
     print("ref_stmt: OK")
@@ -275,6 +300,9 @@ class Parser:
        self.token.type == "DEFINITIONS" or self.token.type == "$REF":
       self.keyword()
     elif self.token.type == "STRING":
+      if self.is_in_definitions_:
+        if self.token.value in self.definitions_:
+          self.definitions_.remove(self.token.value)
       if self.is_in_required_:
         self.required_.append(self.token.value)
       if self.is_in_properties_:
