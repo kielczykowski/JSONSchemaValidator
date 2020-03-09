@@ -40,7 +40,7 @@ class Scanner:
       elif type != 'SKIP':
         value = match.group(type).strip("\"")
         print(value.upper())
-        if type == 'STRING':
+        if type == 'STRING' or type == "REF_URI":
           yield Token("QUOT", "\"", line_number, match.start()-line_start)
           if value in keywords:
             type = value.upper()
